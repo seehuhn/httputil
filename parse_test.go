@@ -95,23 +95,42 @@ func TestTokenizeHeader(t *testing.T) {
 	}
 }
 
+func TestHeaderParts(t *testing.T) {
+	in := HeaderParts{}
+	out := in.String()
+	expected := ""
+	if out != expected {
+		t.Errorf("wrong formatting, expected %q, got %q", expected, out)
+	}
+
+	in = HeaderParts{
+		{"a", ""},
+		{"b", "c"},
+	}
+	out = in.String()
+	expected = "a, b=c"
+	if out != expected {
+		t.Errorf("wrong formatting, expected %q, got %q", expected, out)
+	}
+}
+
 func TestParseHeader(t *testing.T) {
 	type parseTest struct {
 		in  string
-		out []HeaderPart
+		out HeaderParts
 		err error
 	}
 
 	table := []parseTest{
-		{"", []HeaderPart{}, nil},
+		{"", HeaderParts{}, nil},
 		{"\"", nil, ErrUnterminatedString},
 		{"\"hello\"", nil, ErrUnexpectedQuotedString},
-		{"a", []HeaderPart{{"a", ""}}, nil},
-		{"a=1", []HeaderPart{{"a", "1"}}, nil},
-		{"a=\"1\"", []HeaderPart{{"a", "\"1\""}}, nil},
-		{" ,,,, , ,, , , ", []HeaderPart{}, nil},
-		{"a,b", []HeaderPart{{"a", ""}, {"b", ""}}, nil},
-		{"a=1,b,c=2", []HeaderPart{{"a", "1"}, {"b", ""}, {"c", "2"}}, nil},
+		{"a", HeaderParts{{"a", ""}}, nil},
+		{"a=1", HeaderParts{{"a", "1"}}, nil},
+		{"a=\"1\"", HeaderParts{{"a", "\"1\""}}, nil},
+		{" ,,,, , ,, , , ", HeaderParts{}, nil},
+		{"a,b", HeaderParts{{"a", ""}, {"b", ""}}, nil},
+		{"a=1,b,c=2", HeaderParts{{"a", "1"}, {"b", ""}, {"c", "2"}}, nil},
 		{"a,b c,d", nil, ErrMissingComma},
 		{"a,b=,d", nil, ErrMissingComma},
 		{"a,b=c d,e", nil, ErrMissingComma},

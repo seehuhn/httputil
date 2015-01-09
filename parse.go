@@ -107,10 +107,40 @@ type HeaderPart struct {
 	Key, Value string
 }
 
+type HeaderParts []HeaderPart
+
+func (parts HeaderParts) String() string {
+	if len(parts) == 0 {
+		return ""
+	}
+
+	n := 2 * (len(parts) - 1) // ", " between entries
+	for _, part := range parts {
+		n += len(part.Key)
+		if part.Value != "" {
+			n += 1 + len(part.Value) // value with leading "=" sign
+		}
+	}
+	res := make([]byte, n)
+
+	p := 0
+	for i, part := range parts {
+		if i > 0 {
+			p += copy(res[p:], ", ")
+		}
+		p += copy(res[p:], part.Key)
+		if part.Value != "" {
+			p += copy(res[p:], "=")
+			p += copy(res[p:], part.Value)
+		}
+	}
+	return string(res)
+}
+
 // ParseHeader parses HTTP an header value.  This function only works
 // for headers which are defined to be comma-separated lists of tokens
 // and key-value pairs, e.g. for the Vary and Cache-Control headers.
-func ParseHeader(value string) ([]HeaderPart, error) {
+func ParseHeader(value string) (HeaderParts, error) {
 	tokens, err := tokenizeHeader(value)
 	if err != nil {
 		return nil, err
