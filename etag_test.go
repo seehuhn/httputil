@@ -1,6 +1,7 @@
 package httputil
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -55,5 +56,15 @@ func TestEtagsEqual(t *testing.T) {
 			t.Errorf("weak comp. of %s and %s failed: expected %t, got %t",
 				test.a, test.b, test.weakEqual, weakEqual)
 		}
+	}
+}
+
+func TestEtagsSplit(t *testing.T) {
+	in := `  "xyzzy", W/"r2d2xxxx",  "c3piozzzz"  `
+	out := EtagsSplit(in)
+	expected := []string{`"xyzzy"`, `W/"r2d2xxxx"`, `"c3piozzzz"`}
+	if !reflect.DeepEqual(out, expected) {
+		t.Errorf("filed to split ETag list, expected %v, got %v",
+			expected, out)
 	}
 }
