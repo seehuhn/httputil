@@ -29,7 +29,7 @@ func EtagIsValid(etag string) bool {
 // EtagsEqualStrong checks whether two etags are equivalent under
 // strong comparison, as defined in section 2.3.2 of RFC 7232.
 func EtagsEqualStrong(a, b string) bool {
-	return a[0] == '"' && a == b
+	return len(a) > 0 && a[0] == '"' && a == b
 }
 
 // EtagsEqualWeak checks whether two etags are equivalent under weak
