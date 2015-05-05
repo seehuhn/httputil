@@ -2,6 +2,7 @@ package httputil
 
 import (
 	"errors"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -165,7 +166,8 @@ func ParseHeader(value string) (HeaderParts, error) {
 			return nil, ErrUnexpectedQuotedString
 		}
 
-		part := HeaderPart{Key: tokens[i]}
+		// TODO(voss): check the RFCs; is Key case-sensitive?  Are values?
+		part := HeaderPart{Key: strings.ToLower(tokens[i])}
 		i++
 		if i+1 < n && tokens[i] == "=" {
 			part.Value = tokens[i+1]
