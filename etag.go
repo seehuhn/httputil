@@ -46,7 +46,7 @@ func EtagsEqualWeak(a, b string) bool {
 
 // EtagsSplit splits a list of comma-separated entity tags.
 func EtagsSplit(list string) []string {
-	res := []string{}
+	var res []string
 	i := 0
 	n := len(list)
 	for i < n {

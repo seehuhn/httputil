@@ -56,15 +56,15 @@ func TestTokenizeHeader(t *testing.T) {
 	}
 
 	table := []testCase{
-		{"", []string{}, nil},
-		{" ", []string{}, nil},
+		{"", nil, nil},
+		{" ", nil, nil},
 		{"a", []string{"a"}, nil},
 		{"aaaa", []string{"aaaa"}, nil},
 		{"a bb ccc", []string{"a", "bb", "ccc"}, nil},
 		{"\"\\", nil, ErrUnterminatedEscape},
 		{"\"", nil, ErrUnterminatedString},
 		{"\r", nil, ErrUnexpectedControlCharacter},
-		{"\t", []string{}, nil},
+		{"\t", nil, nil},
 		{" \t a  \t\t  ", []string{"a"}, nil},
 		{`"a  \" b" c`, []string{`"a  \" b"`, "c"}, nil},
 		{"<>", []string{"<", ">"}, nil},
@@ -122,13 +122,13 @@ func TestParseHeader(t *testing.T) {
 	}
 
 	table := []parseTest{
-		{"", HeaderParts{}, nil},
+		{"", nil, nil},
 		{"\"", nil, ErrUnterminatedString},
 		{"\"hello\"", nil, ErrUnexpectedQuotedString},
 		{"a", HeaderParts{{"a", ""}}, nil},
 		{"a=1", HeaderParts{{"a", "1"}}, nil},
 		{"a=\"1\"", HeaderParts{{"a", "\"1\""}}, nil},
-		{" ,,,, , ,, , , ", HeaderParts{}, nil},
+		{" ,,,, , ,, , , ", nil, nil},
 		{"a,b", HeaderParts{{"a", ""}, {"b", ""}}, nil},
 		{"a=1,b,c=2", HeaderParts{{"a", "1"}, {"b", ""}, {"c", "2"}}, nil},
 		{"a,b c,d", nil, ErrMissingComma},

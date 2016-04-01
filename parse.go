@@ -28,7 +28,7 @@ func isCtl(c rune) bool {
 }
 
 func tokenizeHeader(header string) ([]string, error) {
-	res := []string{}
+	var res []string
 
 	start := 0
 	quoted := false
@@ -147,7 +147,7 @@ func ParseHeader(value string) (HeaderParts, error) {
 		return nil, err
 	}
 
-	res := []HeaderPart{}
+	var res []HeaderPart
 
 	requireComma := false
 
